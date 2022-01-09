@@ -12,6 +12,7 @@ import {
   FormHelperText,
   Grid,
   Box,
+  IconButton,
 } from '@mui/material';
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -24,16 +25,30 @@ const BattleForm = () => {
   const [currency, setCurrency] = useState('USD');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [numTravelers, setNumTravelers] = useState(2);
-
+  // const [numTravelers, setNumTravelers] = useState(1);
+  const [ages, setAges] = useState([null]);
   const dispatch = useDispatch();
   // const { user, loading, success } = useSelector((state) => state.user);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    // console.log(ages);
+  }, [ages]);
 
-  const handleSubmit = () => {
-    console.log('sub');
+  const removeTraveler = (travelerId) => {
+    const newAges = ages;
+    newAges.splice(travelerId, 1);
+    setAges(() => [...newAges]);
   };
+
+  const addTravelerAge = (id, age) => {
+    setAges((prevAges) => {
+      let newAges = prevAges;
+      newAges[id] = age;
+      return [...newAges];
+    });
+  };
+
+  const handleSubmit = () => {};
 
   return (
     <Container component='main' maxWidth='xs'>
@@ -60,7 +75,7 @@ const BattleForm = () => {
             select
             label='Select'
             value={currency}
-            onChange={(e) => console.log(e.target.value)}
+            onChange={(e) => {}}
             helperText='Please select your currency'
           >
             {[
@@ -82,39 +97,76 @@ const BattleForm = () => {
               </MenuItem>
             ))}
           </TextField>
-          {Array.from(Array(numTravelers + 1).keys())
-            .slice(1)
-            .map((traveler) => (
-              <Box
-                sx={{
-                  display: 'flex',
-                  // alignItems: 'center',
+          <TextField
+            fullWidth
+            id='date'
+            label='Start Date'
+            disablePast
+            InputProps={{
+              inputProps: { min: new Date().toISOString().split('T')[0] },
+            }}
+            type='date'
+            sx={{ mb: 4 }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            fullWidth
+            id='date'
+            label='End Date'
+            InputProps={{
+              inputProps: { min: new Date().toISOString().split('T')[0] },
+            }}
+            type='date'
+            sx={{ mb: 4 }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          {ages.map((age, travelerId) => (
+            <Box
+              key={travelerId}
+              sx={{
+                mb: 4,
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <TextField
+                InputProps={{ inputProps: { min: 0, max: 200 } }}
+                required
+                fullWidth
+                value={age}
+                onChange={(e) => addTravelerAge(travelerId, +e.target.value)}
+                id='outlined-number'
+                label={`Traveler #${travelerId + 1} Age`}
+                type='number'
+                InputLabelProps={{
+                  shrink: true,
                 }}
-              >
-                <TextField
-                  InputProps={{ inputProps: { min: 0, max: 200 } }}
-                  sx={{ mb: 4 }}
-                  required
-                  fullWidth
-                  onChange={(e) => console.log(e.target.value)}
-                  id='outlined-number'
-                  label={`Traveler #${traveler} Age`}
-                  type='number'
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-                <CloseIcon />
-              </Box>
-            ))}
+              />
+              {travelerId !== 0 && (
+                <IconButton
+                  onClick={() => removeTraveler(travelerId)}
+                  color='primary'
+                  aria-label='remove traveler'
+                  component='span'
+                >
+                  <CloseIcon />
+                </IconButton>
+              )}
+            </Box>
+          ))}
           <Button
-            onClick={() => setNumTravelers(numTravelers + 1)}
+            onClick={() => {
+              setAges((prev) => [...ages, null]);
+            }}
             variant='outlined'
             endIcon={<AddIcon />}
           >
             Add traveler
           </Button>
-
           <Button
             type='submit'
             fullWidth
