@@ -31,8 +31,8 @@ const BattleForm = () => {
   // const { user, loading, success } = useSelector((state) => state.user);
 
   useEffect(() => {
-    // console.log(ages);
-  }, [ages]);
+    console.log(startDate);
+  }, [startDate]);
 
   const removeTraveler = (travelerId) => {
     const newAges = ages;
@@ -99,11 +99,20 @@ const BattleForm = () => {
           </TextField>
           <TextField
             fullWidth
+            onChange={(e) => {
+              setStartDate(e.target.value);
+              setEndDate('');
+            }}
             id='date'
+            value={startDate}
+            // prevent manual input for now
+            onKeyDown={(e) => e.preventDefault()}
             label='Start Date'
             disablePast
             InputProps={{
-              inputProps: { min: new Date().toISOString().split('T')[0] },
+              inputProps: {
+                min: new Date(Date.now()).toISOString().split('T')[0],
+              },
             }}
             type='date'
             sx={{ mb: 4 }}
@@ -114,9 +123,24 @@ const BattleForm = () => {
           <TextField
             fullWidth
             id='date'
+            value={endDate}
+            // prevent manual input for now
+            onKeyDown={(e) => e.preventDefault()}
             label='End Date'
+            onChange={(e) => {
+              setEndDate(e.target.value);
+            }}
             InputProps={{
-              inputProps: { min: new Date().toISOString().split('T')[0] },
+              inputProps: {
+                // min date at least 1 day after start date or 1 day after today
+                min: startDate
+                  ? new Date(new Date(startDate).getTime() + 3600 * 1000 * 24)
+                      .toISOString()
+                      .split('T')[0]
+                  : new Date(Date.now() + 3600 * 1000 * 24)
+                      .toISOString()
+                      .split('T')[0],
+              },
             }}
             type='date'
             sx={{ mb: 4 }}
@@ -187,3 +211,16 @@ const BattleForm = () => {
 };
 
 export default BattleForm;
+
+/*
+const date1 = new Date('2022-01-11');
+const date2 = new Date('2022-01-11');
+const diffTime = Math.abs(date2 - date1);
+const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+console.log(diffTime + " milliseconds");
+console.log(diffDays + " days");
+
+new Date((new Date('2022-01-09')).now() + 3600 * 1000 * 24)
+                      .toISOString()
+                      .split('T')[0]
+*/
