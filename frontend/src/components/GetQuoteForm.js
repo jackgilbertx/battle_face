@@ -145,8 +145,6 @@ const GetQuoteForm = () => {
             id='startDate'
             value={startDate}
             required
-            // prevent manual input for now
-            onKeyDown={(e) => e.preventDefault()}
             label='Start Date'
             InputProps={{
               inputProps: {
@@ -164,8 +162,6 @@ const GetQuoteForm = () => {
             id='endDate'
             value={endDate}
             required
-            // prevent manual input for now
-            onKeyDown={(e) => e.preventDefault()}
             label='End Date'
             onChange={(e) => {
               setEndDate(e.target.value);
