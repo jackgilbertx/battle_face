@@ -1,7 +1,0 @@
-export const USER_LOGIN = 'USER_LOGIN';
-export const USER_LOGOUT = 'USER_LOGOUT';
-export const USER_LOADING = 'USER_LOADING';
-export const QUOTE_LOADING = 'QUOTE_LOADING';
-export const QUOTE_SERVER_ERROR = 'QUOTE_SERVER_ERROR';
-export const AUTH_SERVER_ERROR = 'AUTH_SERVER_ERROR';
-export const GET_QUOTE = 'GET_QUOTE';
