@@ -6,11 +6,12 @@ React app with express api & simple jwt mock auth (user not stored in db). Im in
 
 ### To run app, dependencies need to be installed in both root folder and 'frontend' folder
 
-1. Run `npm install` in root folder
-2. Run `cd frontend`
-3. Run `npm install` in /frontend folder
-4. Run `cd ..` back to root folder
-5. Run `npm run dev` --- this will boot up both the express server and react app
-6. Login with username: `test@gmail.com` and password: `123456`
+1. Clone
+2. Run `npm install` in root folder
+3. Run `cd frontend`
+4. Run `npm install` in /frontend folder
+5. Run `cd ..` back to root folder
+6. Run `npm run dev` --- this will boot up both the express server and react app
+7. Login with username: `test@gmail.com` and password: `123456`
 
 Please reach out with any questions or if somethings broken : [jackgilbertx@gmail.com](jackgilbertx@gmail.com)
