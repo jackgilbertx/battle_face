@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 /* 
-   Hacky way to mock a user db using .env file 
+   Hacky way to mock a user db using db file 
    ONLY 1 user can be logged into app
 */
 app.post('/login', (req, res) => {
