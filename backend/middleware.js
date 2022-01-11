@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
-import asyncHandler from 'express-async-handler';
+import { jwt_secret } from './db.js';
 
 /* 
    This isnt really doing anything, just checking that the request has a bearer token attached
 */
-export const protect = asyncHandler(async (req, res, next) => {
+export const protect = (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -12,16 +12,14 @@ export const protect = asyncHandler(async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(' ')[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, jwt_secret);
       req.user = decoded.email;
       next();
     } catch (error) {
-      res.status(401);
-      throw new Error('Not authorized, token failed');
+      res.status(401).send('Not authorized, token failed');
     }
   }
   if (!token) {
-    res.status(401);
-    throw new Error('Not authorized, no token');
+    res.status(401).send('Not authorized, no token');
   }
-});
+};

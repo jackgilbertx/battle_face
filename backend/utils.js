@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
+import { jwt_secret } from './db.js';
 
 export const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+  return jwt.sign({ id }, jwt_secret, { expiresIn: '30d' });
 };
 
 export const findLoad = (age) => {

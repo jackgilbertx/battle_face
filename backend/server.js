@@ -1,11 +1,10 @@
 import express from 'express';
-import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
 import { protect } from './middleware.js';
 import { generateToken, findLoad } from './utils.js';
 import cors from 'cors';
+import { authorizedUser } from './db.js';
 
-dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -17,7 +16,7 @@ app.use(express.json());
 app.post('/login', (req, res) => {
   const { password } = req.body;
   const { email } = req.body;
-  if (email === process.env.EMAIL && password === process.env.PASSWORD) {
+  if (email === authorizedUser.email && password === authorizedUser.password) {
     res.status(200).json({
       token: generateToken(email),
       email,
@@ -43,6 +42,6 @@ app.post('/quotation', protect, (req, res) => {
   res.status(200).json({ quote, currencyType, uid });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 app.listen(PORT, console.log(`Server running on port ${PORT}`));

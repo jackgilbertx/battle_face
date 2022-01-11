@@ -247,7 +247,11 @@ const GetQuoteForm = () => {
               </Box>
             )}
             {quote && (
-              <Typography component='h1' variant='h2'>
+              <Typography
+                component='h1'
+                style={{ textAlign: 'center' }}
+                variant='h2'
+              >
                 {getCurrencySymbol(quote.currencyType)}
                 {quote.quote}
               </Typography>
