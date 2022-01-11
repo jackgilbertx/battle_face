@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import bcrypt from 'bcryptjs';
+import { v4 as uuidv4 } from 'uuid';
 import { protect } from './middleware.js';
 import { generateToken, findLoad } from './utils.js';
 import cors from 'cors';
@@ -35,11 +35,12 @@ app.post('/quotation', protect, (req, res) => {
   const diffTime = Math.abs(endDate - startDate);
   const totalDays = 1 + Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   let fixedRate = 3;
+  const uid = uuidv4();
 
   const quote = ages
     .reduce((acc, cur) => acc + fixedRate * findLoad(cur) * totalDays, 0)
     .toFixed(2);
-  res.status(200).json({ quote, currencyType });
+  res.status(200).json({ quote, currencyType, uid });
 });
 
 const PORT = process.env.PORT || 5000;

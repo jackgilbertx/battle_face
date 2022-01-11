@@ -148,7 +148,6 @@ const GetQuoteForm = () => {
             // prevent manual input for now
             onKeyDown={(e) => e.preventDefault()}
             label='Start Date'
-            disablePast
             InputProps={{
               inputProps: {
                 min: new Date(Date.now()).toISOString().split('T')[0],
