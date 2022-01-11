@@ -1,9 +1,11 @@
 import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
 
+/* 
+   This isnt really doing anything, just checking that the request has a bearer token attached
+*/
 export const protect = asyncHandler(async (req, res, next) => {
   let token;
-
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
@@ -14,7 +16,6 @@ export const protect = asyncHandler(async (req, res, next) => {
       req.user = decoded.email;
       next();
     } catch (error) {
-      console.error(error);
       res.status(401);
       throw new Error('Not authorized, token failed');
     }

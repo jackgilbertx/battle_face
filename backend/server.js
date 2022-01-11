@@ -2,38 +2,44 @@ import express from 'express';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import { protect } from './middleware.js';
-import { generateToken } from './generateToken.js';
+import { generateToken, findLoad } from './utils.js';
+import cors from 'cors';
 
 dotenv.config();
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
-app.post('/signup', (req, res) => {
-  const { email } = req.body;
-  const token = generateToken(email);
-  res.json({ token, email });
-});
-
-const matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(password, PROCESS.env.password);
-};
-
+/* 
+   Hacky way to mock a user db using .env file 
+   ONLY 1 user can be logged into app
+*/
 app.post('/login', (req, res) => {
-  const password = req.password;
-  const email = req.email;
-  if (matchPassword(password)) {
-    res.send({
-      password,
-      email,
+  const { password } = req.body;
+  const { email } = req.body;
+  if (email === process.env.EMAIL && password === process.env.PASSWORD) {
+    res.status(200).json({
       token: generateToken(email),
+      email,
     });
+  } else {
+    res.status(401).json({ error: 'Incorrect username or password' });
   }
 });
 
 app.post('/quotation', protect, (req, res) => {
-  console.log(req.body);
-  res.send('Here is your quote');
+  const { currencyType } = req.body;
+  const { ages } = req.body;
+  const startDate = new Date(req.body.startDate);
+  const endDate = new Date(req.body.endDate);
+  const diffTime = Math.abs(endDate - startDate);
+  const totalDays = 1 + Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  let fixedRate = 3;
+
+  const quote = ages
+    .reduce((acc, cur) => acc + fixedRate * findLoad(cur) * totalDays, 0)
+    .toFixed(2);
+  res.status(200).json({ quote, currencyType });
 });
 
 const PORT = process.env.PORT || 5000;

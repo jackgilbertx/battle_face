@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import BattleForm from './BattleForm';
+import GetQuoteForm from './GetQuoteForm';
 import Login from './Login';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ function App() {
       <Router>
         <Routes>
           <Route path='/login' element={<Login />} />
-          <Route path='/' element={<BattleForm />} />
+          <Route path='/' element={<GetQuoteForm />} />
         </Routes>
       </Router>
     </div>

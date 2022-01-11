@@ -2,54 +2,79 @@ import axios from 'axios';
 import {
   USER_LOGIN,
   USER_LOGOUT,
-  LOADING,
-  SERVER_ERROR,
+  USER_LOADING,
+  QUOTE_LOADING,
+  QUOTE_SERVER_ERROR,
   GET_QUOTE,
+  AUTH_SERVER_ERROR,
 } from '../constants';
 
-export const userLogin = (email, password) => async (dispatch) => {
+export const login = (email, password) => async (dispatch) => {
   try {
-    dispatch({ type: LOADING, payload: true });
+    dispatch({ type: USER_LOADING, payload: true });
 
     const config = {
       headers: { 'Content-Type': 'application/json' },
     };
 
-    const { user } = await axios.post('/getToken', { email, password }, config);
+    const { data } = await axios.post(
+      'http://localhost:5000/login',
+      { email, password },
+      config
+    );
     dispatch({
       type: USER_LOGIN,
-      payload: user,
+      payload: data,
     });
-    // BAD PRACTICE - but.. ok for take home project
-    localStorage.setItem('userInfo', JSON.stringify(user));
-  } catch (error) {
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // BAD PRACTICE I WOULD NEVER DO THIS IN REAL LIFE - but.. ok for take home project
+    ///////////////////////////////////////////////////////////////////////////////////
+    localStorage.setItem('userInfo', JSON.stringify(data));
+    
+  } catch (err) {
     dispatch({
-      type: SERVER_ERROR,
+      type: AUTH_SERVER_ERROR,
     });
   } finally {
-    dispatch({ type: LOADING, payload: false });
+    dispatch({ type: USER_LOADING, payload: false });
   }
 };
 
-export const userLogout = () => async (dispatch) => {
+export const logout = () => async (dispatch) => {
   localStorage.removeItem('userInfo');
   dispatch({ type: USER_LOGOUT });
 };
 
-export const getQuot = () => async (dispatch) => {
+export const getQuote = (payload) => async (dispatch, getState) => {
   try {
-    dispatch({ type: LOADING, payload: true });
-    const { user } = await axios.get('/getToken');
+    dispatch({ type: QUOTE_LOADING, payload: true });
+
+    const {
+      user: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const { data } = await axios.post(
+      'http://localhost:5000/quotation',
+      payload,
+      config
+    );
     dispatch({
       type: GET_QUOTE,
-      payload: user,
+      payload: data,
     });
-    localStorage.setItem('userInfo', JSON.stringify(user));
-  } catch (error) {
+  } catch (err) {
     dispatch({
-      type: SERVER_ERROR,
+      type: QUOTE_SERVER_ERROR,
     });
   } finally {
-    dispatch({ type: LOADING, payload: false });
+    dispatch({ type: QUOTE_LOADING, payload: false });
   }
 };

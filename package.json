@@ -14,6 +14,7 @@
   "author": "Jack Gilbert",
   "license": "ISC",
   "dependencies": {
+    "@date-io/moment": "^1.3.13",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -24,5 +25,11 @@
   "devDependencies": {
     "concurrently": "^6.0.0",
     "nodemon": "^2.0.7"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ]
   }
 }

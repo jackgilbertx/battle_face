@@ -1,29 +1,48 @@
-import React, { useState } from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Container,
+  Alert,
+  Button,
+  TextField,
+  Box,
+  CircularProgress,
+  Avatar,
+  Typography,
+} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { useDispatch } from 'react-redux';
-import { userLogin } from '../redux/actions/actions';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../redux/actions/actions';
 
 const Login = () => {
-  const disptach = useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { userInfo, loading, error } = useSelector((state) => state.user);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    disptach(userLogin(email, password));
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/');
+    }
+  }, [userInfo]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(login(email, password));
   };
+
+  if (loading) {
+    return (
+      <Box sx={{ mt: 16, display: 'flex' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Container component='main' maxWidth='xs'>
-      <CssBaseline />
       <Box
         sx={{
           marginTop: 8,
@@ -38,11 +57,13 @@ const Login = () => {
         <Typography component='h1' variant='h5'>
           Sign in
         </Typography>
+
         <Box component='form' onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             margin='normal'
             required
             fullWidth
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
             id='email'
             label='Email Address'
@@ -54,6 +75,7 @@ const Login = () => {
             margin='normal'
             required
             fullWidth
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
             name='password'
             label='Password'
@@ -69,11 +91,16 @@ const Login = () => {
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              Use any email / pass, they will not be persisted in any dbs
-            </Grid>
-          </Grid>
+          <Box>
+            <Typography variant='caption' display='block'>
+              Valid username & pass can be found in Readme
+            </Typography>
+          </Box>
+          {error && (
+            <Box style={{ marginTop: 16 }}>
+              <Alert severity='error'>Server Error!</Alert>
+            </Box>
+          )}
         </Box>
       </Box>
     </Container>
@@ -81,18 +108,3 @@ const Login = () => {
 };
 
 export default Login;
-
-
-
-/*
-{
-  type: 'BUY',
-  totalGold: 1,
-  totalUSD: 1000
-},
-{
-  type: 'SELL',
-  totalGold: 1,
-  totalUSD: 1000
-}
-*/

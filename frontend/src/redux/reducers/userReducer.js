@@ -1,9 +1,15 @@
-import { USER_LOGIN, USER_LOGOUT, LOADING, SERVER_ERROR } from '../constants';
+import {
+  USER_LOGIN,
+  USER_LOGOUT,
+  USER_LOADING,
+  AUTH_SERVER_ERROR,
+} from '../constants';
 
-const user = localStorage.getItem('userInfo');
+const localStorageUser = localStorage.getItem('userInfo');
+const parsedUser = JSON.parse(localStorageUser);
 
 const initialState = {
-  user: user || null,
+  userInfo: parsedUser || null,
   loading: false,
   error: null,
 };
@@ -11,16 +17,16 @@ const initialState = {
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case USER_LOGIN: {
-      return { ...state, user: action.payload };
+      return { ...state, userInfo: action.payload, error: false };
     }
     case USER_LOGOUT: {
-      return { ...state, user: null };
+      return { ...state, userInfo: null, error: false };
     }
-    case LOADING: {
+    case USER_LOADING: {
       return { ...state, loading: action.payload };
     }
-    case SERVER_ERROR: {
-      return { ...state, error: action.payload };
+    case AUTH_SERVER_ERROR: {
+      return { ...state, error: true };
     }
     default:
       return state;

@@ -1,4 +1,9 @@
-import { LOADING, SERVER_ERROR, GET_QUOTE } from '../constants';
+import {
+  QUOTE_LOADING,
+  QUOTE_SERVER_ERROR,
+  GET_QUOTE,
+  USER_LOGOUT,
+} from '../constants';
 
 const initialState = {
   quote: null,
@@ -9,13 +14,16 @@ const initialState = {
 const quoteReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_QUOTE: {
-      return { ...state, quote: action.payload };
+      return { ...state, quote: action.payload, error: false };
     }
-    case LOADING: {
+    case QUOTE_LOADING: {
       return { ...state, loading: action.payload };
     }
-    case SERVER_ERROR: {
-      return { ...state, error: action.payload };
+    case QUOTE_SERVER_ERROR: {
+      return { ...state, error: true };
+    }
+    case USER_LOGOUT: {
+      return initialState;
     }
     default:
       return state;
