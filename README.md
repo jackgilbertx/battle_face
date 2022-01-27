@@ -1,4 +1,4 @@
-# Battle Face Get Quote Form
+# Battle Face interview assignment
 
 React app with express api & simple jwt mock auth (user not stored in db). Im interviewing for the front-end position but choose the full stack project because I dont have professional expeirence with Angular and I was told your developing a mobile app with react native.
 
